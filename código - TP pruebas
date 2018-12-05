@@ -1,0 +1,505 @@
+import dstp7.model.DiaSemana;
+import dstp7.model.Negocio;
+import dstp7.model.Venta;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+
+public class test {
+    
+    public test() {
+    }
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
+
+    
+     @Test
+     public void test1R1() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+         venta.AgregarDetalle(Negocio.Productos()[0], 1);
+         venta.AgregarDetalle(Negocio.Productos()[1], 2);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Lunes);
+         
+         //comprobacion - el descuento es igual a 0 ya que la cantidad de productos de panaderia es igual a 1
+         assertEquals(0 , venta.Descuento(), 0);
+     }
+     
+     @Test
+     public void test2R1() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+         venta.AgregarDetalle(Negocio.Productos()[0], 2);
+         venta.AgregarDetalle(Negocio.Productos()[1], 2);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Lunes);
+         
+         //comprobacion - el descuento es igual a 25 ya que la cantidad de productos de panaderia es igual a 2
+         assertEquals(25 , venta.Descuento(), 0);
+     }
+     @Test
+     public void test3R1() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+         venta.AgregarDetalle(Negocio.Productos()[0], 3);
+         venta.AgregarDetalle(Negocio.Productos()[1], 2);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Lunes);
+         
+         //comprobacion - el descuento es igual a 50 ya que la cantidad de productos de panaderia es mayor que 2
+         assertEquals(50 , venta.Descuento(), 0);
+     }
+     
+     @Test
+      public void test1R2() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+         venta.AgregarDetalle(Negocio.Productos()[4], 6);
+         venta.AgregarDetalle(Negocio.Productos()[3], 5);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Martes);
+         
+         //comprobacion - el descuento es igual a 23.4 -> (780x0.03), ya que la compra se realiza un dia martes y su monto es de entre $ 500 y $ 1000
+         assertEquals(23.4 , venta.Descuento(), 0);
+     }
+      @Test
+      public void test2R2() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+         venta.AgregarDetalle(Negocio.Productos()[4], 10);
+         venta.AgregarDetalle(Negocio.Productos()[3], 5);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Miercoles);
+         
+         //comprobacion - el descuento es igual a 55 -> (1100x0.05), ya que la compra se realiza un dia miercoles y su monto es de entre $ 1000 y $ 2500
+         assertEquals(55 , venta.Descuento(), 0);
+     }
+      @Test
+      public void test3R2() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+         venta.AgregarDetalle(Negocio.Productos()[4], 50);
+         venta.AgregarDetalle(Negocio.Productos()[3], 30);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Miercoles);
+         
+         //comprobacion - el descuento es igual a 377 -> (5800x0.065), ya que la compra se realiza un dia miercoles y su monto es superior a $2500
+         assertEquals(377 , venta.Descuento(), 0);
+     }
+       @Test
+      public void test1R3() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+         venta.AgregarDetalle(Negocio.Productos()[2], 5);
+         venta.AgregarDetalle(Negocio.Productos()[3], 2);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Jueves);
+         
+         //comprobacion - el descuento es igual a 66 -> ((40x4x0.3)+(60x0.3)), ya que al comprar 5 unidades del rubro Lacteos y 2 del rubro Verduras; a 4 unidades del rubro lacteos se le aplica un descuento del 30% y a 1 unidad del rubro verduras lo mismo
+         assertEquals(66 , venta.Descuento(), 0);
+     }
+      @Test
+      public void test2R3() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+         venta.AgregarDetalle(Negocio.Productos()[3], 2);
+         venta.AgregarDetalle(Negocio.Productos()[6], 2);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Jueves);
+         
+         //comprobacion - el descuento es igual a 18 -> (60x0.3), ya que la compra es sobre el rubro "Verduras" y al llevar 2 unidades de un mismo producto, a 1 de ellos se le aplica el descuento del 30%
+         assertEquals(18 , venta.Descuento(), 0);
+     }
+      @Test
+      public void test3R3() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+         venta.AgregarDetalle(Negocio.Productos()[3], 6);
+         venta.AgregarDetalle(Negocio.Productos()[6], 2);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Jueves);
+         
+         //comprobacion - el descuento es igual a 18 -> (60x4x0.3), ya que la compra es sobre el rubro "Verduras" y al llevar mas de 5 unidades de un mismo producto, a 4 de ellos se le aplica el descuento del 30%
+         assertEquals(72 , venta.Descuento(), 0);
+     }
+      @Test
+      public void test1R4() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+         venta.AgregarDetalle(Negocio.Productos()[3], 20);
+         venta.AgregarDetalle(Negocio.Productos()[6], 15);
+          venta.AgregarDetalle(Negocio.Productos()[1], 15);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Viernes);
+         
+         //comprobacion - el descuento es igual a 207  -> ((30x15x0.1)+(20x60x0.1)+(15x28x0.1)), ya que la compra es un dia viernes, superior a $1000 y con mas de 3 unidades por producto; se le aplica un 10% de descuento a todos los productos
+         assertEquals(207 , venta.Descuento(), 0);
+     }
+      @Test
+      public void test2R4() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+        
+         venta.AgregarDetalle(Negocio.Productos()[6], 15);
+          venta.AgregarDetalle(Negocio.Productos()[1], 15);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Sabado);
+         
+         //comprobacion - el descuento es igual a 0  ya que la compra es inferior a los $1000
+         assertEquals(0 , venta.Descuento(), 0);
+     }
+      @Test
+      public void test3R4() {
+         Negocio.Iniciar();
+         Venta venta = new Venta();
+        
+         venta.AgregarDetalle(Negocio.Productos()[6], 3);
+         venta.AgregarDetalle(Negocio.Productos()[0], 3);
+         venta.AgregarDetalle(Negocio.Productos()[5], 3);
+         venta.AgregarDetalle(Negocio.Productos()[4], 3);
+         venta.AgregarDetalle(Negocio.Productos()[3], 3);
+         venta.AgregarDetalle(Negocio.Productos()[2], 3);
+         venta.AgregarDetalle(Negocio.Productos()[1], 3);
+         
+         //ejecucion
+         venta.CalcularDescuentos(DiaSemana.Domingo);
+         
+         //comprobacion - el descuento es igual a 0  ya que la compra no supera las 3 unidades en ninguno de los productos
+         assertEquals(0 , venta.Descuento(), 0);
+     }
+     
+     import java.util.ArrayList;
+public class Venta {
+     private double _descuento;
+        private final ArrayList<LineaVenta> _detalle = new ArrayList<>();
+
+        public void AgregarDetalle(Producto producto, int cantidad){
+            LineaVenta lv = new LineaVenta(producto, cantidad);
+            _detalle.add(lv);
+        }
+        
+        public double Descuento(){
+            return _descuento;
+        }
+        
+        public LineaVenta[] Detalle(){
+            LineaVenta[] lineas = new LineaVenta[_detalle.size()];
+            return _detalle.toArray(lineas);
+        }
+        
+        public void CalcularDescuentos(DiaSemana dia){
+            _descuento = Negocio.Reglas()[dia.getValue()-1].RealizarDescuento(this);
+        }
+        
+        public double Total(){
+            double total = 0d;
+            if (Detalle() == null) return total;
+            for (int i = 0; i < Detalle().length; i++)
+            {
+                total += Detalle()[i].SubTotal();
+            }
+            return total;
+        }
+        
+        public double TotalGeneral(){
+            return Total() - _descuento;
+        }
+}
+
+public class  Negocio {
+    private static final Producto[] _productos = new Producto[7];
+    private static final IRegla[] _reglas = new IRegla[7];
+
+    public static void Iniciar()
+    {
+        _reglas[0] = new Regla1();
+        _reglas[1] = new Regla2();
+        _reglas[2] = new Regla2();
+        _reglas[3] = new Regla3();
+        _reglas[4] = new Regla4();
+        _reglas[5] = new Regla4();
+        _reglas[6] = new Regla4();
+
+        Rubro rubro1 = new Rubro(1, "Panaderia");
+        Rubro rubro2 = new Rubro(2, "Lacteos");
+        Rubro rubro3 = new Rubro(3, "Verduras");
+        Rubro rubro4 = new Rubro(4, "Limpieza");
+
+        _productos[0] = new Producto(1, "1", 50, rubro1);
+        _productos[1] = new Producto(2, "2", 30, rubro2);
+        _productos[2] = new Producto(3, "3", 40, rubro2);
+        _productos[3] = new Producto(4, "4", 60, rubro3);
+        _productos[4] = new Producto(5, "5", 80, rubro2);
+        _productos[5] = new Producto(6, "6", 15, rubro4);
+        _productos[6] = new Producto(7, "7", 28, rubro1);
+    }
+    public static IRegla[] Reglas()
+    {
+        return _reglas;
+    }
+    public static Producto[] Productos()
+    {
+        return _productos;
+    }
+}
+
+public interface IRegla {
+    double RealizarDescuento(Venta venta);
+}
+
+
+import java.util.ArrayList;
+public class Regla1 implements IRegla{
+    private static final double porcentaje = 0.5d;
+    @Override
+    public double RealizarDescuento(Venta venta)
+    {
+        double descuento = 0;
+        ArrayList<ProductoDescuento> productos = new ArrayList<>();
+        for (LineaVenta Detalle : venta.Detalle()) {
+            if ("Panaderia".equals(Detalle.Producto.Rubro.Descripcion)) {
+                boolean existe = false;
+                for (ProductoDescuento productoDescuento : productos) {
+                    if (productoDescuento.Producto.Codigo == Detalle.Producto.Codigo) {
+                        existe = true;
+                        productoDescuento.Cantidad += Detalle.Cantidad;
+                        break;
+                    }
+                }
+                if (!existe) {
+                    productos.add(new ProductoDescuento(Detalle.Producto, Detalle.Cantidad));
+                }
+            }
+        }
+        for(ProductoDescuento productoDescuento : productos)
+        {
+            if (productoDescuento.Cantidad == 2)
+            {
+                descuento += productoDescuento.Producto.Precio * porcentaje;
+            }
+            else if (productoDescuento.Cantidad > 2)
+            {
+                descuento += productoDescuento.Producto.Precio * porcentaje * 2;
+            }
+        }
+        return descuento;
+    }
+}
+
+public class Regla2 implements IRegla
+    {
+        private static final double porcentaje1 = 0.03d;
+        private static final double porcentaje2 = 0.05d;
+        private static final double porcentaje3 = 0.065d;
+        @Override
+        public double RealizarDescuento(Venta venta)
+        {
+            double total = venta.Total();
+            if (total > 500 && total <= 1000)
+            {
+                return total * porcentaje1;
+            }
+            if (total > 1000 && total <= 2500)
+            {
+                return total * porcentaje2;
+            }
+            else if (total>2500)
+            {
+                return total * porcentaje3;
+            }
+return 0;
+        }
+    }
+    
+    import java.util.ArrayList;
+public class Regla3 implements IRegla{
+        private static final double porcentaje = 0.3d;
+        @Override
+        public double RealizarDescuento(Venta venta){
+            double descuento = 0;
+            ArrayList<ProductoDescuento> productos = new ArrayList<>();
+            for (LineaVenta Detalle : venta.Detalle()) {
+                if ("Lacteos".equals(Detalle.Producto.Rubro.Descripcion) 
+                        || "Verduras".equals(Detalle.Producto.Rubro.Descripcion)) {
+                    boolean existe = false;
+                    for (ProductoDescuento productoDescuento : productos) {
+                        if (productoDescuento.Producto.Codigo == Detalle.Producto.Codigo) {
+                            existe = true;
+                            productoDescuento.Cantidad += Detalle.Cantidad;
+                            break;
+                        }
+                    }
+                    if (!existe) {
+                        productos.add(new ProductoDescuento(Detalle.Producto,Detalle.Cantidad));
+                    }
+                }
+            }
+
+            for(ProductoDescuento productoDescuento : productos)
+            {
+                if (productoDescuento.Cantidad == 2)
+                {
+                    descuento += productoDescuento.Producto.Precio * porcentaje;
+                }
+                else if (productoDescuento.Cantidad > 2 && productoDescuento.Cantidad <= 5)
+                {
+                    descuento += productoDescuento.Producto.Precio * (productoDescuento.Cantidad-1) * porcentaje;
+                }
+                else if (productoDescuento.Cantidad > 5)
+                {
+                    descuento += productoDescuento.Producto.Precio * 4 * porcentaje;
+                }
+            }
+            return descuento;
+        }
+    }
+
+import java.util.ArrayList;
+public class Regla4 implements IRegla{
+        private static final double porcentaje = 0.1d;
+        @Override
+        public double RealizarDescuento(Venta venta){
+            if (venta.Total() <= 1000) return 0;
+
+            double descuento = 0;
+            ArrayList<ProductoDescuento> productos = new ArrayList<>();
+            
+            for (LineaVenta Detalle : venta.Detalle()) {
+                boolean existe = false;
+                for (ProductoDescuento productoDescuento : productos) {
+                    if (productoDescuento.Producto.Codigo == Detalle.Producto.Codigo) {
+                        existe = true;
+                        productoDescuento.Cantidad += Detalle.Cantidad;
+                        break;
+                    }
+                }
+                if (!existe) {
+                    productos.add(new ProductoDescuento(Detalle.Producto, Detalle.Cantidad));
+                }
+            }
+            for(ProductoDescuento productoDescuento : productos){
+                if (productoDescuento.Cantidad > 3)
+                {
+                    descuento += productoDescuento.Producto.Precio *   productoDescuento.Cantidad *  porcentaje;
+                }
+            }
+            return descuento;
+        }
+    }
+    
+    public class Rubro {
+  public Rubro(){}
+
+  public Rubro(int codigo, String descripcion){
+     Codigo = codigo;
+     Descripcion = descripcion;
+  }
+  public int Codigo;
+  public String Descripcion;
+}
+
+
+public class ProductoDescuento {
+    public ProductoDescuento(){}
+    public ProductoDescuento(Producto producto, int cantidad){
+        Producto = producto;
+        Cantidad = cantidad;
+    }
+
+    public Producto Producto;
+    public int Cantidad;
+}
+
+public class LineaVenta {
+      public LineaVenta(){}
+
+      public LineaVenta(Producto producto, int cantidad){
+            Producto = producto;
+            Cantidad = cantidad;
+            Precio = producto.Precio;
+      }
+
+      public int Cantidad; 
+      public Producto Producto;
+      public double Precio;
+
+      public double SubTotal(){
+         return Precio*Cantidad; 
+      }
+}
+
+public class Producto {
+    public Producto()
+        {
+            
+        }
+        public Producto(int codigo, String descripcion, double precio, Rubro rubro)
+        {
+            Codigo = codigo;
+            Descripcion = descripcion;
+            Precio = precio;
+            Rubro = rubro;
+        }
+        public int Codigo;
+        public String Descripcion;
+        public double Precio;
+        public Rubro Rubro;
+}
+
+
+public enum DiaSemana {
+    Lunes(1),
+    Martes(2),
+    Miercoles(3),
+    Jueves(4),
+    Viernes(5),
+    Sabado(6),
+    Domingo(7);
+    
+    private final int value;
+    private DiaSemana(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+}
+
+import dstp7.model.Negocio;
+public class Main {
+    public static void main(String[] args) {
+        Negocio.Iniciar();
+    }
+}
+
